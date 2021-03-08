@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{193165A2-8074-4A8E-B122-26851582DABF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DDECAD.MZ</RootNamespace>
+    <AssemblyName>AcadToolsX20</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ac20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\distr\lib\ac20\</OutputPath>
+    <DefineConstants>TRACE;ac20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ddac20</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\..\..\distr\lib\ac20\</OutputPath>
+    <DefineConstants>TRACE;ac20</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ac20">
+      <HintPath>..\..\..\TIExCAD\distr\lib\ac20\ac20.dll</HintPath>
+    </Reference>
+    <Reference Include="AcCoreMgd">
+      <HintPath>C:\ObjectARX\2020\inc\AcCoreMgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcCui">
+      <HintPath>C:\ObjectARX\2020\inc\AcCui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcDbMgd">
+      <HintPath>C:\ObjectARX\2020\inc\AcDbMgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcMgd">
+      <HintPath>C:\ObjectARX\2020\inc\AcMgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcWindows">
+      <HintPath>C:\ObjectARX\2020\inc\AcWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>C:\ObjectARX\2020\inc\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ac15\Classes\AcadEvents\AcadComponentManagerInit.cs">
+      <Link>Classes\AcadEvents\AcadComponentManagerInit.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\AcadEvents\AcadSystemVarChanged.cs">
+      <Link>Classes\AcadEvents\AcadSystemVarChanged.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\GUI\Model\ViewBaseControl.cs">
+      <Link>Classes\GUI\Model\ViewBaseControl.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\GUI\Ribbon\RibTabMzBuild.cs">
+      <Link>Classes\GUI\Ribbon\RibTabMzBuild.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\GUI\Windows\MzBaseWindow.xaml.cs">
+      <Link>Classes\GUI\Windows\MzBaseWindow.xaml.cs</Link>
+      <DependentUpon>MzBaseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\ac15\Classes\Init.cs">
+      <Link>Classes\Init.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\Sys\Constantes.cs">
+      <Link>Classes\Sys\Constantes.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\Sys\Enums.cs">
+      <Link>Classes\Sys\Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\Sys\StaticObjects.cs">
+      <Link>Classes\Sys\StaticObjects.cs</Link>
+    </Compile>
+    <Compile Include="..\ac15\Classes\Sys\WindowsCollection.cs">
+      <Link>Classes\Sys\WindowsCollection.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\ac15\Classes\GUI\Windows\MzBaseWindow.xaml">
+      <Link>Classes\GUI\Windows\MzBaseWindow.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\ac15\DictionaryBaseWpfMenuButtons.xaml">
+      <Link>DictionaryBaseWpfMenuButtons.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\ac15\DictionaryBaseWpfMenuButtons2.xaml">
+      <Link>DictionaryBaseWpfMenuButtons2.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

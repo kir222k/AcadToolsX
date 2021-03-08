@@ -1,0 +1,148 @@
+﻿<UserControl x:Class="ACADTOOLSX.Classes.GUI.Windows.MzBaseWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ACADTOOLSX.Classes.GUI.Windows"
+             mc:Ignorable="d" 
+             MinHeight="250" MinWidth="400" >
+    <!--РЕСУРСЫ-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="u:\dev\AcadCopyLayToFile\AcadCopyLayToFile\ac15\DictionaryBaseWpfMenuButtons.xaml" />
+                <ResourceDictionary Source="u:\dev\AcadCopyLayToFile\AcadCopyLayToFile\ac15\DictionaryBaseWpfMenuButtons2.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!--БАЗОВЫЙ ГРИД-->
+    <Grid Name="GridBase"  MaxHeight="1080" MaxWidth="1920"  Margin="1,2,1,1">
+        <!--СТРОКИ-->
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition MinHeight="26" MaxHeight="26"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--СТОЛБЦЫ-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100" Width="200"></ColumnDefinition>
+            <ColumnDefinition MinWidth="100" Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!--ПАНЕЛЬ ИНСТРУМЕНТОВ-->
+        <ToolBarPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"  Margin="1,0,1,0"  
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="LightGray">
+            <!--ОРИЕНТИРОВАТЬ ГОРИЗОНТАЛЬНО-->
+            <ToolBarTray Orientation="Horizontal" 
+                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <!--ПАНЕЛЬ-->
+                <ToolBar VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="-3,0,0,0"
+                         Width="{Binding ElementName=GridBase, Path=ActualWidth,Mode=OneWay}"
+                         BorderBrush="Black" BorderThickness="1"  Background="LightGray"
+                         AllowDrop="False">
+                    <!--ОБНОВИТЬ-->
+                    <Button Name="ButtonUpdate" IsEnabled="True"
+                            Click="ButtonUpdate_Click" 
+                            MinHeight="22" MaxHeight="22" MinWidth="40" Margin="1,1,1,1"
+                            Style="{DynamicResource ButtonStyleToolBarMenu}"> 
+                        <TextBlock Text=" Обновить "></TextBlock>
+                        <Button.Resources>
+                            <Style  TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <!--ВЫБРАТЬ ВСЕ-->
+                    <Button Name="ButtonSelectAll"  IsEnabled="True"
+                            Click="ButtonSelectAll_Click"
+                            MinHeight="22" MaxHeight="22" MinWidth="40" Margin="1,1,1,1"
+                            Style="{DynamicResource ButtonStyleToolBarMenu}">
+                        <TextBlock Text=" Выбрать все "></TextBlock>
+                        <Button.Resources>
+                            <Style  TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <!--РАЗДЕЛИТЬ-->
+                    <Button Name="ButtonSetting"  IsEnabled="True"
+                            MinHeight="22" MaxHeight="22" MinWidth="70" Margin="1,1,1,1"
+                            Style="{DynamicResource ButtonStyleToolBarMenu2}">
+                        <TextBlock Text=" Разделить "></TextBlock>
+                        <Button.Resources>
+                            <Style  TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+        </ToolBarPanel>
+
+        <!--ОСНОВНОЕ ТЕЛО-->
+        <DataGrid Name="AcDocsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
+                    Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="1,1,1,1"
+                    BorderBrush="Black" BorderThickness="1"  Background="LightGray">
+            <DataGrid.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="3"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns >
+                <!--ВЫБРАТЬ-->
+                <DataGridCheckBoxColumn MinWidth="55" MaxWidth="55"
+                                        Binding="{Binding Path=SelectState}">
+                    <DataGridCheckBoxColumn.Header>
+                        <TextBlock Text="Выбрать" HorizontalAlignment="Center"></TextBlock>
+                    </DataGridCheckBoxColumn.Header>
+                </DataGridCheckBoxColumn>
+                <!--ДОКУМЕНТЫ-->
+                <DataGridTextColumn Width="{Binding ElementName=AcDocsGrid, Path=ActualWidth, Mode=OneWay}"
+                                    Binding="{Binding Path=PathAcDoc}">
+                    <DataGridTextColumn.Header >
+                        <TextBlock Text="Открытые файлы" HorizontalAlignment="Center"></TextBlock>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--<DataGrid Name="MzZonekGrid" Grid.Column="1" Grid.Row="1" Margin="1,1,1,1"
+            BorderBrush="Black" BorderThickness="1"  Background="LightGray">
+            <DataGrid.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="3"/>
+                </Style>
+            </DataGrid.Resources>
+
+        </DataGrid>-->
+
+        <!--СТРОКА СОСТОЯНИЯ-->
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="1,0,1,1"
+                   BorderBrush="Black" BorderThickness="1"  Background="LightGray">
+            <StatusBar.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="3"/>
+                </Style>
+            </StatusBar.Resources>
+
+            <StatusBarItem >
+                <TextBlock Text="Выбрать файлы =>  "></TextBlock>
+            </StatusBarItem>
+            
+            <!--<StatusBarItem >
+                <TextBlock Text="{Binding ElementName=GridBase, Path=ActualWidth,Mode=OneWay}"></TextBlock>
+            </StatusBarItem>-->
+            
+            <StatusBarItem >
+                <TextBlock Text=" Нажать 'Разделить' "></TextBlock>
+            </StatusBarItem>
+
+            <!--<StatusBarItem >
+                <TextBlock Text="{Binding ElementName=GridBase, Path=ActualHeight,Mode=OneWay}"></TextBlock>
+            </StatusBarItem>-->
+
+        </StatusBar>
+
+    </Grid>
+</UserControl>
