@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,7 @@ namespace ACADTOOLSX.GUI.Model
         internal MzBaseWindow BaseWindow;
 
         //список документов
-        internal readonly List<AcDocsData> AcDocsData = new List<AcDocsData>();
+        internal  List<AcDocsData> AcDocsDataList = new List<AcDocsData>();
 
         /// <summary>
         /// Создание палитры и подписка на события
@@ -47,10 +48,12 @@ namespace ACADTOOLSX.GUI.Model
             { 
                 BaseWindow = new MzBaseWindow();
 
-                // Подпишем наш метод на событие в форме MzBaseWindow
-                UpdateGridEventHandler MzAddStickDel = new UpdateGridEventHandler(UpdateGrid);
-                BaseWindow.UpdateGridEvent += MzAddStickDel;
+                // Подпишем наш метод на событие обновления грида в форме MzBaseWindow
+                UpdateGridEventHandler UpdateGridEvHdr = new UpdateGridEventHandler(UpdateGrid);
+                BaseWindow.UpdateGridEvent += UpdateGridEvHdr;
 
+                SelectAllGridRowsEventHandler SelectGridEvHdr = new SelectAllGridRowsEventHandler(SelectAllRowGrid);
+                BaseWindow.SelectAllGridRowsEvent += SelectGridEvHdr;
 
                 // Создадим палитру и вставим в нее MzBaseWindow
                 //SizePaletteSet SizePal =new SizePaletteSet();
@@ -68,7 +71,7 @@ namespace ACADTOOLSX.GUI.Model
         internal  void UpdateGrid()
         {
             // очистим грид 
-            AcDocsData.Clear();
+            AcDocsDataList.Clear();
             BaseWindow.AcDocsGrid.ItemsSource = null;
             BaseWindow.AcDocsGrid.Items.Clear();
             BaseWindow.AcDocsGrid.Items.Refresh();
@@ -82,7 +85,7 @@ namespace ACADTOOLSX.GUI.Model
                     AcDocsData AcData = new AcDocsData();
                     AcData.PathAcDoc = AcDoc.Name;
                     AcData.SelectState = false;
-                    AcDocsData.Add(AcData);
+                    AcDocsDataList.Add(AcData);
                 }
             }
             catch (acad.Runtime.Exception ea)
@@ -93,10 +96,41 @@ namespace ACADTOOLSX.GUI.Model
             {
                 AcSM.SendStringDebugStars(new List<string> { e.Message});
             }
-            BaseWindow.AcDocsGrid.ItemsSource = AcDocsData;
+            BaseWindow.AcDocsGrid.ItemsSource = AcDocsDataList;
             BaseWindow.AcDocsGrid.Items.Refresh();
         }
 
+        internal void SelectAllRowGrid()
+        {
+            List<AcDocsData> AcDocsDataListx = new List<AcDocsData>();
+            // пройдемся по коллекции м заменим чеки 
+            foreach (AcDocsData Ad in AcDocsDataList) 
+            {
+                //_ = Ad.SelectState == false ? true : false;
+                if (Ad.SelectState == false)
+                    Ad.SelectState = true;
+
+                AcDocsData AcData = new AcDocsData();
+                AcData.PathAcDoc = Ad.PathAcDoc;
+                AcData.SelectState = true;
+
+                AcDocsDataListx.Add(AcData);
+            }
+
+            // очистим грид 
+            AcDocsDataList.Clear();
+            BaseWindow.AcDocsGrid.ItemsSource = null;
+            BaseWindow.AcDocsGrid.Items.Clear();
+
+            AcDocsDataList = AcDocsDataListx;
+            BaseWindow.AcDocsGrid.ItemsSource = AcDocsDataList;
+            BaseWindow.AcDocsGrid.Items.Refresh();
+
+
+            // зададим грид заново
+
+
+        }
     }
 
     internal class AcDocsData
