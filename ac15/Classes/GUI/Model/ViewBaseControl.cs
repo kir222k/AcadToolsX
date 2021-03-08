@@ -52,7 +52,6 @@ namespace ACADTOOLSX.GUI.Model
                 BaseWindow.UpdateGridEvent += MzAddStickDel;
 
 
-
                 // Создадим палитру и вставим в нее MzBaseWindow
                 //SizePaletteSet SizePal =new SizePaletteSet();
                 PalSet = new CustomPaletteSetAcad(
