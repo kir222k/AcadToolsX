@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 using ACADTOOLSX.Classes.GUI.Windows;
 using ACADTOOLSX;
 using TIExCAD.Generic;
-using ACADTOOLSX.Classes.Sys;
+
 
 
 namespace ACADTOOLSX.GUI.Model
@@ -48,12 +48,17 @@ namespace ACADTOOLSX.GUI.Model
             { 
                 BaseWindow = new MzBaseWindow();
 
-                // Подпишем наш метод на событие обновления грида в форме MzBaseWindow
+                // Подпишем наш метод  UpdateGrid на событие 'update'кнопка в форме MzBaseWindow
                 UpdateGridEventHandler UpdateGridEvHdr = new UpdateGridEventHandler(UpdateGrid);
                 BaseWindow.UpdateGridEvent += UpdateGridEvHdr;
 
+                // Подпишем наш метод SelectAllRowGrid на событие 'check_all'кнопка грида в форме MzBaseWindow
                 SelectAllGridRowsEventHandler SelectGridEvHdr = new SelectAllGridRowsEventHandler(SelectAllRowGrid);
                 BaseWindow.SelectAllGridRowsEvent += SelectGridEvHdr;
+
+                // Подпишем наш метод ExplodeDrawing на событие 'ExplodeDrawing'кнопка грида в форме MzBaseWindow
+                ExplodeDrawingEventHandler ExplodeDrawingEvHdr = new ExplodeDrawingEventHandler(ExplodeDrawing);
+                BaseWindow.ExplodeDrawingEvent += ExplodeDrawingEvHdr;
 
                 // Создадим палитру и вставим в нее MzBaseWindow
                 //SizePaletteSet SizePal =new SizePaletteSet();
@@ -131,9 +136,61 @@ namespace ACADTOOLSX.GUI.Model
 
 
         }
+
+        internal void ExplodeDrawing()
+        {
+            // BaseWindow.AcDocsGrid.Items.Refresh();
+            //BaseWindow.AcDocsGrid.Items.Refresh();
+            //BaseWindow.AcDocsGrid.Refresh();
+
+            AcadSendMess AcSM = new AcadSendMess();
+            AcSM.SendStringDebugStars(new List<string> { "закомменчен => BaseWindow.AcDocsGrid.Items.Refresh();" });
+
+            List<AcDocsData> listCheckedData = new List<AcDocsData>();
+            // выберем только отмеченные в гиде записи
+            //foreach (AcDocsData It in AcDocsDataList)
+            //{
+            //    if (It.SelectState==true)
+            //    {
+            //        listCheckedData.Add(It);
+            //    }
+            //}
+            listCheckedData = BaseWindow.AcDocsGrid.Items.OfType<AcDocsData>().ToList();
+
+            foreach (var item in listCheckedData)
+            {
+
+                //AcadSendMess AcSM = new AcadSendMess();
+                AcSM.SendStringDebugStars(new List<string> {
+                    item.PathAcDoc,
+                    item.SelectState.ToString()
+
+                }); ;
+            }
+
+            // List<pojo> list = calendarmstrDG.Items.OfType<pojo>().ToList();
+            
+            /*
+            DrawingLayouts DrLs = new DrawingLayouts(listCheckedData);
+            foreach (AcDocWithLayouts It in DrLs.GetListLayouts())
+            {
+
+                AcadSendMess AcSM = new AcadSendMess();
+                AcSM.SendStringDebugStars(new List<string> {
+                It.fullPathDrawing,
+                It.listLayouts.ToString(),
+
+
+                });
+            }
+            */
+
+            //AcadSendMess AcSM = new AcadSendMess();
+            //AcSM.SendStringDebugStars(new List<string> { "ExplodeDrawing" });
+        }
     }
 
-    internal class AcDocsData
+    public class AcDocsData
     {
         public bool SelectState { get; set; }
         public string PathAcDoc { get; set; }

@@ -117,17 +117,23 @@
     <Compile Include="..\ac15\Classes\Init.cs">
       <Link>Classes\Init.cs</Link>
     </Compile>
+    <Compile Include="..\ac15\Classes\Sys\AcadMetods.cs">
+      <Link>Classes\Sys\AcadMetods.cs</Link>
+    </Compile>
     <Compile Include="..\ac15\Classes\Sys\Constantes.cs">
       <Link>Classes\Sys\Constantes.cs</Link>
     </Compile>
     <Compile Include="..\ac15\Classes\Sys\Enums.cs">
       <Link>Classes\Sys\Enums.cs</Link>
     </Compile>
+    <Compile Include="..\ac15\Classes\Sys\Interfaces.cs">
+      <Link>Classes\Sys\Interfaces.cs</Link>
+    </Compile>
     <Compile Include="..\ac15\Classes\Sys\StaticObjects.cs">
       <Link>Classes\Sys\StaticObjects.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\Sys\WindowsCollection.cs">
-      <Link>Classes\Sys\WindowsCollection.cs</Link>
+    <Compile Include="..\ac15\Classes\Sys\Structures.cs">
+      <Link>Classes\Sys\Structures.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

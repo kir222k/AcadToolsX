@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 // объявим делегат:
 public delegate void UpdateGridEventHandler();
 public delegate void SelectAllGridRowsEventHandler();
+public delegate void ExplodeDrawingEventHandler();
 
 namespace ACADTOOLSX.Classes.GUI.Windows
 {
@@ -27,6 +28,7 @@ namespace ACADTOOLSX.Classes.GUI.Windows
         // объявление события:
         public event UpdateGridEventHandler UpdateGridEvent;
         public event SelectAllGridRowsEventHandler SelectAllGridRowsEvent;
+        public event ExplodeDrawingEventHandler ExplodeDrawingEvent;
 
         public MzBaseWindow()
         {
@@ -34,6 +36,13 @@ namespace ACADTOOLSX.Classes.GUI.Windows
 
             //ButtonAddStick.IsEnabled=false;
         }
+
+        void OnChecked(object sender, RoutedEventArgs e)
+        {
+           // AcDocsGrid.Items.Refresh();
+        }
+
+
 
         // Метод для вызова самого события (имя прописать в XAML кнопки Click="<метод>"
         private  void ButtonUpdate_Click(object sender, RoutedEventArgs e)
@@ -46,6 +55,13 @@ namespace ACADTOOLSX.Classes.GUI.Windows
         {
             SelectAllGridRowsEvent?.Invoke();
         }
+
+        //ButtonExplode_Click
+        private void ButtonExplode_Click(object sender, RoutedEventArgs e)
+        {
+            ExplodeDrawingEvent?.Invoke();
+        }
+
 
     }
 }

@@ -65,7 +65,8 @@
                         </Button.Resources>
                     </Button>
                     <!--РАЗДЕЛИТЬ-->
-                    <Button Name="ButtonSetting"  IsEnabled="True"
+                    <Button Name="ButtonExlode"  IsEnabled="True"
+                            Click="ButtonExplode_Click"
                             MinHeight="22" MaxHeight="22" MinWidth="70" Margin="1,1,1,1"
                             Style="{DynamicResource ButtonStyleToolBarMenu2}">
                         <TextBlock Text=" Разделить "></TextBlock>
@@ -96,6 +97,11 @@
                     <DataGridCheckBoxColumn.Header>
                         <TextBlock Text="Выбрать" HorizontalAlignment="Center"></TextBlock>
                     </DataGridCheckBoxColumn.Header>
+                    <!--<DataGridCheckBoxColumn.CellStyle>
+                        <Style>
+                            <EventSetter Event="CheckBox.Checked" Handler="OnChecked"/>
+                        </Style>
+                    </DataGridCheckBoxColumn.CellStyle>-->
                 </DataGridCheckBoxColumn>
                 <!--ДОКУМЕНТЫ-->
                 <DataGridTextColumn Width="{Binding ElementName=AcDocsGrid, Path=ActualWidth, Mode=OneWay}"
