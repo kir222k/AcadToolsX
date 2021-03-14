@@ -17,4 +17,10 @@ namespace ACADTOOLSX
 
         List<AcDocWithLayouts> GetListLayouts();
     }
+
+    interface IAcDocsData
+    {
+         bool SelectState { get; set; }
+         string PathAcDoc { get; set; }
+    }
 }

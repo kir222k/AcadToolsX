@@ -17,6 +17,9 @@ using System.Windows.Shapes;
 public delegate void UpdateGridEventHandler();
 public delegate void SelectAllGridRowsEventHandler();
 public delegate void ExplodeDrawingEventHandler();
+public delegate void UpdateAfterCheckEventHandler(int row, int col);
+public delegate void UpdateAfterUnCheckEventHandler(int row, int col);
+
 
 namespace ACADTOOLSX.Classes.GUI.Windows
 {
@@ -29,6 +32,8 @@ namespace ACADTOOLSX.Classes.GUI.Windows
         public event UpdateGridEventHandler UpdateGridEvent;
         public event SelectAllGridRowsEventHandler SelectAllGridRowsEvent;
         public event ExplodeDrawingEventHandler ExplodeDrawingEvent;
+        public event UpdateAfterCheckEventHandler UpdateAfterCheckEvent;
+        public event UpdateAfterUnCheckEventHandler UpdateAfterUnCheckEvent;
 
         public MzBaseWindow()
         {
@@ -39,13 +44,21 @@ namespace ACADTOOLSX.Classes.GUI.Windows
 
         void OnChecked(object sender, RoutedEventArgs e)
         {
-           // AcDocsGrid.Items.Refresh();
+            int row; //int col;
+            row = AcDocsGrid.SelectedIndex;
+            UpdateAfterCheckEvent?.Invoke(row, 333);
+        }
+
+        void OnUnChecked(object sender, RoutedEventArgs e)
+        {
+            int row; //int col;
+            row = AcDocsGrid.SelectedIndex;
+            UpdateAfterUnCheckEvent?.Invoke(row, 333);
         }
 
 
-
         // Метод для вызова самого события (имя прописать в XAML кнопки Click="<метод>"
-        private  void ButtonUpdate_Click(object sender, RoutedEventArgs e)
+        private void ButtonUpdate_Click(object sender, RoutedEventArgs e)
         {
             UpdateGridEvent?.Invoke();
         }

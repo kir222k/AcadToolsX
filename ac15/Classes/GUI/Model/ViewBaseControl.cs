@@ -25,18 +25,20 @@ using ACADTOOLSX;
 using TIExCAD.Generic;
 
 
-
 namespace ACADTOOLSX.GUI.Model
 {
     internal class ViewBaseControl 
     {
-
         internal CustomPaletteSetAcad PalSet;
-        //internal SizePaletteSet SizePal;
         internal MzBaseWindow BaseWindow;
 
         //список документов
         internal  List<AcDocsData> AcDocsDataList = new List<AcDocsData>();
+        //список отмеченных документов (их путей)
+         List<string> PathDocCheckList = new List<string>();
+
+        UpdateAfterCheckEventHandler UpdateAfterCheckEvHdr;
+        UpdateAfterUnCheckEventHandler UpdateAfterUnCheckEvHdr;
 
         /// <summary>
         /// Создание палитры и подписка на события
@@ -44,6 +46,8 @@ namespace ACADTOOLSX.GUI.Model
         /// <remarks>Выполняется из Init.cs </remarks>
         internal  void ViewBaseCreate()
         {
+            PathDocCheckList.Add("");
+
             if (PalSet == null)
             { 
                 BaseWindow = new MzBaseWindow();
@@ -60,8 +64,15 @@ namespace ACADTOOLSX.GUI.Model
                 ExplodeDrawingEventHandler ExplodeDrawingEvHdr = new ExplodeDrawingEventHandler(ExplodeDrawing);
                 BaseWindow.ExplodeDrawingEvent += ExplodeDrawingEvHdr;
 
+                // Подпишем наш метод  на событие 
+                UpdateAfterCheckEvHdr = new UpdateAfterCheckEventHandler(UpdateGridAfterCheck);
+                BaseWindow.UpdateAfterCheckEvent+= UpdateAfterCheckEvHdr;
+
+                // Подпишем наш метод  на событие 
+                UpdateAfterUnCheckEvHdr = new UpdateAfterUnCheckEventHandler(UpdateGridAfterUnCheck);
+                BaseWindow.UpdateAfterUnCheckEvent += UpdateAfterUnCheckEvHdr;
+
                 // Создадим палитру и вставим в нее MzBaseWindow
-                //SizePaletteSet SizePal =new SizePaletteSet();
                 PalSet = new CustomPaletteSetAcad(
                     "FILE-EXPLODE", new Guid("A4328512-75F5-4CBD-82D1-0D5CE09BD348"), WidthPaletteSet.WidthBig, HeigthPaletteSet.HeightBig, BaseWindow, "Control");
                 PalSet.PaletteSetCreate();
@@ -75,6 +86,11 @@ namespace ACADTOOLSX.GUI.Model
 
         internal  void UpdateGrid()
         {
+            PathDocCheckList.RemoveAll(s => s !="");
+
+            BaseWindow.UpdateAfterCheckEvent -= UpdateAfterCheckEvHdr;
+            BaseWindow.UpdateAfterUnCheckEvent -= UpdateAfterUnCheckEvHdr;
+
             // очистим грид 
             AcDocsDataList.Clear();
             BaseWindow.AcDocsGrid.ItemsSource = null;
@@ -82,31 +98,32 @@ namespace ACADTOOLSX.GUI.Model
             BaseWindow.AcDocsGrid.Items.Refresh();
 
             AcadSendMess AcSM = new AcadSendMess();
-            try
+            // загоним в грид
+            foreach (Document AcDoc in AcadApp.DocumentManager)
             {
-                // загоним в грид
-                foreach (Document AcDoc in AcadApp.DocumentManager)
+                AcDocsData AcData = new AcDocsData
                 {
-                    AcDocsData AcData = new AcDocsData();
-                    AcData.PathAcDoc = AcDoc.Name;
-                    AcData.SelectState = false;
-                    AcDocsDataList.Add(AcData);
-                }
+                    PathAcDoc = AcDoc.Name,
+                    SelectState = false
+                };
+
+                AcDocsDataList.Add(AcData);
             }
-            catch (acad.Runtime.Exception ea)
-            {
-                AcSM.SendStringDebugStars(new List<string> { ea.Message });
-            }
-            catch (System.Exception e)
-            {
-                AcSM.SendStringDebugStars(new List<string> { e.Message});
-            }
+
             BaseWindow.AcDocsGrid.ItemsSource = AcDocsDataList;
             BaseWindow.AcDocsGrid.Items.Refresh();
+
+            BaseWindow.UpdateAfterCheckEvent += UpdateAfterCheckEvHdr;
+            BaseWindow.UpdateAfterUnCheckEvent += UpdateAfterUnCheckEvHdr;
         }
 
         internal void SelectAllRowGrid()
         {
+            BaseWindow.UpdateAfterCheckEvent -= UpdateAfterCheckEvHdr;
+            BaseWindow.UpdateAfterUnCheckEvent -= UpdateAfterUnCheckEvHdr;
+
+            List<string> PathDocCheckListX = new List<string>();
+                        
             List<AcDocsData> AcDocsDataListx = new List<AcDocsData>();
             // пройдемся по коллекции м заменим чеки 
             foreach (AcDocsData Ad in AcDocsDataList) 
@@ -120,6 +137,8 @@ namespace ACADTOOLSX.GUI.Model
                 AcData.SelectState = true;
 
                 AcDocsDataListx.Add(AcData);
+                // заполним коллекцию путей отмеченных документов
+                PathDocCheckListX.Add(Ad.PathAcDoc);
             }
 
             // очистим грид 
@@ -131,66 +150,64 @@ namespace ACADTOOLSX.GUI.Model
             BaseWindow.AcDocsGrid.ItemsSource = AcDocsDataList;
             BaseWindow.AcDocsGrid.Items.Refresh();
 
+            if (PathDocCheckList != null)
+            {
+                PathDocCheckList.Clear();
+                PathDocCheckList = PathDocCheckListX;
+            }
+            else { PathDocCheckList = PathDocCheckListX; }
 
-            // зададим грид заново
-
-
+            BaseWindow.UpdateAfterCheckEvent += UpdateAfterCheckEvHdr;
+            BaseWindow.UpdateAfterUnCheckEvent += UpdateAfterUnCheckEvHdr;
         }
 
         internal void ExplodeDrawing()
         {
-            // BaseWindow.AcDocsGrid.Items.Refresh();
-            //BaseWindow.AcDocsGrid.Items.Refresh();
-            //BaseWindow.AcDocsGrid.Refresh();
-
             AcadSendMess AcSM = new AcadSendMess();
-            AcSM.SendStringDebugStars(new List<string> { "закомменчен => BaseWindow.AcDocsGrid.Items.Refresh();" });
-
-            List<AcDocsData> listCheckedData = new List<AcDocsData>();
-            // выберем только отмеченные в гиде записи
-            //foreach (AcDocsData It in AcDocsDataList)
-            //{
-            //    if (It.SelectState==true)
-            //    {
-            //        listCheckedData.Add(It);
-            //    }
-            //}
-            listCheckedData = BaseWindow.AcDocsGrid.Items.OfType<AcDocsData>().ToList();
-
-            foreach (var item in listCheckedData)
+            if (PathDocCheckList!=null)
             {
-
-                //AcadSendMess AcSM = new AcadSendMess();
-                AcSM.SendStringDebugStars(new List<string> {
-                    item.PathAcDoc,
-                    item.SelectState.ToString()
-
-                }); ;
+                foreach (string item in PathDocCheckList)
+                {
+                  
+                    AcSM.SendStringDebugStars(new List<string> { item });
+                }
             }
+        }
 
-            // List<pojo> list = calendarmstrDG.Items.OfType<pojo>().ToList();
-            
-            /*
-            DrawingLayouts DrLs = new DrawingLayouts(listCheckedData);
-            foreach (AcDocWithLayouts It in DrLs.GetListLayouts())
+        internal void UpdateGridAfterCheck(int row, int col)
+        {
+            // if (!list.Exists(x => x.ID == 1))
+            AcadSendMess AcSM = new AcadSendMess();
+
+            if (PathDocCheckList!=null)
             {
-
-                AcadSendMess AcSM = new AcadSendMess();
-                AcSM.SendStringDebugStars(new List<string> {
-                It.fullPathDrawing,
-                It.listLayouts.ToString(),
-
-
-                });
+                // если отмеченного файла нет в списке путей
+                if(!PathDocCheckList.Exists(x => x.Equals(AcDocsDataList[row].PathAcDoc)))
+                {
+                    // добавим путь
+                    PathDocCheckList.Add(AcDocsDataList[row].PathAcDoc);
+                    //AcSM.SendStringDebugStars(new List<string> { "!PathDocCheckList.Exists добавляется путь"}); 
+                }
             }
-            */
-
-            //AcadSendMess AcSM = new AcadSendMess();
-            //AcSM.SendStringDebugStars(new List<string> { "ExplodeDrawing" });
+        }
+       
+        internal void UpdateGridAfterUnCheck (int row, int col)
+        {
+            AcadSendMess AcSM = new AcadSendMess();
+            // если пути в списке нет
+            if (PathDocCheckList != null)
+            {
+                // если отмеченный файл есть в списке путей
+                if (PathDocCheckList.Exists(x => x.Equals(AcDocsDataList[row].PathAcDoc)))
+                {
+                    PathDocCheckList.RemoveAll(s => s == AcDocsDataList[row].PathAcDoc);
+                }
+            }
         }
     }
 
-    public class AcDocsData
+
+    public class AcDocsData : IAcDocsData
     {
         public bool SelectState { get; set; }
         public string PathAcDoc { get; set; }

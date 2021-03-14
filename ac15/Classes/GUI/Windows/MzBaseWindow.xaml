@@ -53,7 +53,7 @@
                         </Button.Resources>
                     </Button>
                     <!--ВЫБРАТЬ ВСЕ-->
-                    <Button Name="ButtonSelectAll"  IsEnabled="True"
+                    <Button Name="ButtonSelectAll"  IsEnabled="False" 
                             Click="ButtonSelectAll_Click"
                             MinHeight="22" MaxHeight="22" MinWidth="40" Margin="1,1,1,1"
                             Style="{DynamicResource ButtonStyleToolBarMenu}">
@@ -92,19 +92,22 @@
 
             <DataGrid.Columns >
                 <!--ВЫБРАТЬ-->
-                <DataGridCheckBoxColumn MinWidth="55" MaxWidth="55"
-                                        Binding="{Binding Path=SelectState}">
+                <DataGridCheckBoxColumn MinWidth="55" MaxWidth="55" IsThreeState="False"
+                                        Binding="{Binding Path=SelectState, Mode=TwoWay}">
                     <DataGridCheckBoxColumn.Header>
                         <TextBlock Text="Выбрать" HorizontalAlignment="Center"></TextBlock>
                     </DataGridCheckBoxColumn.Header>
-                    <!--<DataGridCheckBoxColumn.CellStyle>
+                    
+                    <DataGridCheckBoxColumn.CellStyle>
                         <Style>
                             <EventSetter Event="CheckBox.Checked" Handler="OnChecked"/>
+                            <EventSetter Event="CheckBox.Unchecked" Handler="OnUnChecked"/>
+                            <!--<EventSetter Event="CheckBox.Click" Handler="OnChecked"/>-->
                         </Style>
-                    </DataGridCheckBoxColumn.CellStyle>-->
+                    </DataGridCheckBoxColumn.CellStyle>
                 </DataGridCheckBoxColumn>
                 <!--ДОКУМЕНТЫ-->
-                <DataGridTextColumn Width="{Binding ElementName=AcDocsGrid, Path=ActualWidth, Mode=OneWay}"
+                <DataGridTextColumn Width="{Binding ElementName=AcDocsGrid, Path=ActualWidth, Mode=TwoWay}"
                                     Binding="{Binding Path=PathAcDoc}">
                     <DataGridTextColumn.Header >
                         <TextBlock Text="Открытые файлы" HorizontalAlignment="Center"></TextBlock>
@@ -113,7 +116,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!--<DataGrid Name="MzZonekGrid" Grid.Column="1" Grid.Row="1" Margin="1,1,1,1"
+        <!--<DataGrid Name="DataChecked" Grid.Column="1" Grid.Row="1" Margin="1,1,1,1"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
             BorderBrush="Black" BorderThickness="1"  Background="LightGray">
             <DataGrid.Resources>
                 <Style TargetType="Border">
