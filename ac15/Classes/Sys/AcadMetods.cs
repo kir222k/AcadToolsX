@@ -9,60 +9,86 @@ using Autodesk.Windows;
 using AdW = Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ACADTOOLSX.GUI.Model;
+using Autodesk.AutoCAD.DatabaseServices;
 
 namespace ACADTOOLSX
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DrawingLayouts : IDrawingLayouts
+
+    //public class DrawingLayouts : IDrawingLayouts
+    //{
+    //    //private string fullPathDrawing;
+    //    // список полных путей (выбранных в гриде)
+    //    private List<AcDocsData> listAcDocs;
+
+
+    //    public DrawingLayouts(List<AcDocsData> listAcDocs)
+    //    {
+    //        this.listAcDocs = listAcDocs;
+    //    }
+
+    //    /// <summary>
+    //    /// Листы чертежа.
+    //    /// </summary>
+    //    /// <returns>Коллекция типа Чертеж.список_его_листов </returns>
+    //    //List<AcDocWithLayouts> IDrawingLayouts.GetListLayouts()
+    //   public  List<AcDocWithLayouts> GetListLayouts()
+    //    {
+    //        string fullPathDrawing;
+    //        List<string> listLays = new List<string>(); ;
+    //        List<AcDocWithLayouts> acDocWithLayouts = new List<AcDocWithLayouts>();
+
+    //        // пройтись по всем открытым чертежам
+    //        foreach (AcDocsData acData in listAcDocs)
+    //        {
+    //            // задать fullPathDrawing
+    //            fullPathDrawing = acData.PathAcDoc; // забрали из источника грида пути к выбранным файлам
+
+
+    //            // задать коллекцию listLays
+    //            // по коллекции листов пространства листов 
+    //            listLays.Add("Лист1");
+    //            listLays.Add("Лист2");
+    //            listLays.Add("Лист3");
+
+    //            // задать переменную типа AcDocWithLayouts
+    //            AcDocWithLayouts acDocLays;
+    //            acDocLays.fullPathDrawing = fullPathDrawing;
+    //            acDocLays.listLayouts = listLays;
+    //            // добавить к коллекции типа AcDocWithLayouts
+    //            acDocWithLayouts.Add(acDocLays);
+    //        }
+
+    //        //throw new NotImplementedException();
+    //        return acDocWithLayouts;
+    //    }
+    //}
+
+   ///<inheritdoc/>
+    public class DrawingLayouts : IListDrawingLayouts
     {
-        //private string fullPathDrawing;
-        // список полных путей (выбранных в гриде)
-        private List<AcDocsData> listAcDocs;
-
-
-        public DrawingLayouts(List<AcDocsData> listAcDocs)
-        {
-            this.listAcDocs = listAcDocs;
-        }
+        private readonly List<Layout> listDrawingLayouts;
+        private Document acDoc;
 
         /// <summary>
-        /// Листы чертежа.
+        /// Коллекция листов чертежа<br/>
+        /// <see href="https://docs.microsoft.com/ru-ru/dotnet/csharp/programming-guide/classes-and-structs/properties"/>
         /// </summary>
-        /// <returns>Коллекция типа Чертеж.список_его_листов </returns>
-        //List<AcDocWithLayouts> IDrawingLayouts.GetListLayouts()
-       public  List<AcDocWithLayouts> GetListLayouts()
+        public List<Layout> ListDrawingLayouts => listDrawingLayouts;
+
+        public Document AcDoc { get => acDoc; set => acDoc=value; }
+
+        public Layout GetListDrawingLayouts()
         {
-            string fullPathDrawing;
-            List<string> listLays = new List<string>(); ;
-            List<AcDocWithLayouts> acDocWithLayouts = new List<AcDocWithLayouts>();
-
-            // пройтись по всем открытым чертежам
-            foreach (AcDocsData acData in listAcDocs)
-            {
-                // задать fullPathDrawing
-                fullPathDrawing = acData.PathAcDoc; // забрали из источника грида пути к выбранным файлам
-
-
-                // задать коллекцию listLays
-                // по коллекции листов пространства листов 
-                listLays.Add("Лист1");
-                listLays.Add("Лист2");
-                listLays.Add("Лист3");
-
-                // задать переменную типа AcDocWithLayouts
-                AcDocWithLayouts acDocLays;
-                acDocLays.fullPathDrawing = fullPathDrawing;
-                acDocLays.listLayouts = listLays;
-                // добавить к коллекции типа AcDocWithLayouts
-                acDocWithLayouts.Add(acDocLays);
-            }
-
-            //throw new NotImplementedException();
-            return acDocWithLayouts;
+            throw new NotImplementedException();
         }
+
+        //public List<Layout> ListDrawingLayouts { get => listDrawingLayouts; set => listDrawingLayouts = value; }
+
+
     }
+
+
+
 
     /*
      *  struct AcDocWithLayouts 

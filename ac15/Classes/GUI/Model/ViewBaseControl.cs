@@ -24,7 +24,6 @@ using ACADTOOLSX.Classes.GUI.Windows;
 using ACADTOOLSX;
 using TIExCAD.Generic;
 
-
 namespace ACADTOOLSX.GUI.Model
 {
     internal class ViewBaseControl 
@@ -39,6 +38,8 @@ namespace ACADTOOLSX.GUI.Model
 
         UpdateAfterCheckEventHandler UpdateAfterCheckEvHdr;
         UpdateAfterUnCheckEventHandler UpdateAfterUnCheckEvHdr;
+
+        GridRowSelectEventHandler GridRowSelectEvHdr;
 
         /// <summary>
         /// Создание палитры и подписка на события
@@ -71,6 +72,10 @@ namespace ACADTOOLSX.GUI.Model
                 // Подпишем наш метод  на событие 
                 UpdateAfterUnCheckEvHdr = new UpdateAfterUnCheckEventHandler(UpdateGridAfterUnCheck);
                 BaseWindow.UpdateAfterUnCheckEvent += UpdateAfterUnCheckEvHdr;
+
+                // Подпишем наш метод  на событие 
+                GridRowSelectEvHdr = new GridRowSelectEventHandler(GridRowSelect);
+                BaseWindow.GridRowSelectEvent += GridRowSelectEvHdr;
 
                 // Создадим палитру и вставим в нее MzBaseWindow
                 PalSet = new CustomPaletteSetAcad(
@@ -204,8 +209,13 @@ namespace ACADTOOLSX.GUI.Model
                 }
             }
         }
+    
+        internal void GridRowSelect (int row)
+        {
+            BaseWindow.ListDrawingLayouts.Items.Clear();
+            BaseWindow.ListDrawingLayouts.Items.Add(row.ToString());
+        }
     }
-
 
     public class AcDocsData : IAcDocsData
     {

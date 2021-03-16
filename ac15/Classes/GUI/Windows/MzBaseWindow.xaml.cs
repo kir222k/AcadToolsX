@@ -19,6 +19,7 @@ public delegate void SelectAllGridRowsEventHandler();
 public delegate void ExplodeDrawingEventHandler();
 public delegate void UpdateAfterCheckEventHandler(int row, int col);
 public delegate void UpdateAfterUnCheckEventHandler(int row, int col);
+public delegate void GridRowSelectEventHandler(int row);
 
 
 namespace ACADTOOLSX.Classes.GUI.Windows
@@ -34,6 +35,7 @@ namespace ACADTOOLSX.Classes.GUI.Windows
         public event ExplodeDrawingEventHandler ExplodeDrawingEvent;
         public event UpdateAfterCheckEventHandler UpdateAfterCheckEvent;
         public event UpdateAfterUnCheckEventHandler UpdateAfterUnCheckEvent;
+        public event GridRowSelectEventHandler GridRowSelectEvent;
 
         public MzBaseWindow()
         {
@@ -42,19 +44,33 @@ namespace ACADTOOLSX.Classes.GUI.Windows
             //ButtonAddStick.IsEnabled=false;
         }
 
-        void OnChecked(object sender, RoutedEventArgs e)
+        private void OnChecked(object sender, RoutedEventArgs e)
         {
             int row; //int col;
             row = AcDocsGrid.SelectedIndex;
             UpdateAfterCheckEvent?.Invoke(row, 333);
         }
 
-        void OnUnChecked(object sender, RoutedEventArgs e)
+        private void OnUnChecked(object sender, RoutedEventArgs e)
         {
             int row; //int col;
             row = AcDocsGrid.SelectedIndex;
             UpdateAfterUnCheckEvent?.Invoke(row, 333);
         }
+
+        //void DataGridRow_Click(object sender, RoutedEventArgs e)
+        //{
+        //    int row;
+        //    row = AcDocsGrid.SelectedIndex;
+        //    GridRowSelectEvent?.Invoke(row);
+        //}
+        private void AcDocsGrid_SelectedCellsChanged(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
+        {
+            int row;
+            row = AcDocsGrid.SelectedIndex;
+            GridRowSelectEvent?.Invoke(row);
+        }
+
 
 
         // Метод для вызова самого события (имя прописать в XAML кнопки Click="<метод>"

@@ -92,7 +92,7 @@
     <Compile Include="Classes\Sys\AcadMetods.cs" />
     <Compile Include="Classes\Sys\Constantes.cs" />
     <Compile Include="Classes\Sys\Enums.cs" />
-    <Compile Include="Classes\Sys\Interfaces.cs" />
+    <Compile Include="Classes\Interfaces.cs" />
     <Compile Include="Classes\Sys\StaticObjects.cs" />
     <Compile Include="Classes\Sys\Structures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
