@@ -173,7 +173,7 @@ namespace ACADTOOLSX.GUI.Model
             {
                 foreach (string item in PathDocCheckList)
                 {
-                  
+                    
                     AcSM.SendStringDebugStars(new List<string> { item });
                 }
             }
@@ -212,8 +212,10 @@ namespace ACADTOOLSX.GUI.Model
     
         internal void GridRowSelect (int row)
         {
+            DrawingLayouts DrLays = new DrawingLayouts();
+
             BaseWindow.ListDrawingLayouts.Items.Clear();
-            BaseWindow.ListDrawingLayouts.Items.Add(row.ToString());
+            BaseWindow.ListDrawingLayouts.Items.Add(row.ToString() + DrLays.ToString());
         }
     }
 

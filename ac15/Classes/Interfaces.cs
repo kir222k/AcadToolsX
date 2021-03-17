@@ -38,7 +38,7 @@ namespace ACADTOOLSX
         /// <summary>
         /// Коллекция листов чертежа.
         /// </summary>
-        List<Autodesk.AutoCAD.DatabaseServices.Layout> ListDrawingLayouts { get; }
+        //List<Autodesk.AutoCAD.DatabaseServices.Layout> ListDrawingLayouts { get; }
 
         /// <summary>
         /// Чертеж AutoCAD.
@@ -50,7 +50,12 @@ namespace ACADTOOLSX
         /// Возращает коллекцию листов чертежа.
         /// </summary>
         /// <returns>Коллекция листов чертежа.</returns>
-        Autodesk.AutoCAD.DatabaseServices.Layout GetListDrawingLayouts();
+        List<Autodesk.AutoCAD.DatabaseServices.Layout> GetListDrawingLayouts();
+    }
+
+    interface IListDrawingsWithLays
+    {
+
     }
 
     interface IAcDocsData

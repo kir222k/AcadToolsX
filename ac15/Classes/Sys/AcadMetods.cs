@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.Windows;
+//using Autodesk.AutoCAD.ApplicationServices.Application;
 using AdW = Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ACADTOOLSX.GUI.Model;
@@ -14,7 +15,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 namespace ACADTOOLSX
 {
 
-    //public class DrawingLayouts : IDrawingLayouts
+    //public class DrawingWithLays : IDrawingLayouts
     //{
     //    //private string fullPathDrawing;
     //    // список полных путей (выбранных в гриде)
@@ -31,7 +32,7 @@ namespace ACADTOOLSX
     //    /// </summary>
     //    /// <returns>Коллекция типа Чертеж.список_его_листов </returns>
     //    //List<AcDocWithLayouts> IDrawingLayouts.GetListLayouts()
-    //   public  List<AcDocWithLayouts> GetListLayouts()
+    //    public List<AcDocWithLayouts> GetListLayouts()
     //    {
     //        string fullPathDrawing;
     //        List<string> listLays = new List<string>(); ;
@@ -63,41 +64,57 @@ namespace ACADTOOLSX
     //    }
     //}
 
-   ///<inheritdoc/>
+    ///<inheritdoc/>
     public class DrawingLayouts : IListDrawingLayouts
     {
-        private readonly List<Layout> listDrawingLayouts;
+        //private  List<Layout> listDrawingLayouts;
         private Document acDoc;
 
         /// <summary>
         /// Коллекция листов чертежа<br/>
         /// <see href="https://docs.microsoft.com/ru-ru/dotnet/csharp/programming-guide/classes-and-structs/properties"/>
         /// </summary>
-        public List<Layout> ListDrawingLayouts => listDrawingLayouts;
-
+        
+        //public List<Layout> ListDrawingLayouts => listDrawingLayouts;
         public Document AcDoc { get => acDoc; set => acDoc=value; }
 
-        public Layout GetListDrawingLayouts()
+        public DrawingLayouts() { }
+        public DrawingLayouts(Document acDoc) { this.acDoc = acDoc; }
+
+        public List<Layout> GetListDrawingLayouts()
         {
-            throw new NotImplementedException();
+            List<Layout> listLays = new List<Layout>();
+            //Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = acDoc.Database;
+
+            using (Transaction tr = db.TransactionManager.StartTransaction())
+            {
+                DBDictionary layoutDic =
+                    tr.GetObject(db.LayoutDictionaryId, OpenMode.ForRead, false) as DBDictionary;
+
+                foreach (DBDictionaryEntry entry in layoutDic)
+
+                {
+                    ObjectId layoutId = entry.Value;
+                    Layout layout
+                        = tr.GetObject(
+                                        layoutId,
+                                        OpenMode.ForRead
+                                      ) as Layout;
+
+                    listLays.Add(layout);
+                }
+
+                tr.Commit();
+            }
+            //listDrawingLayouts = listLays;
+            return listLays;
         }
 
-        //public List<Layout> ListDrawingLayouts { get => listDrawingLayouts; set => listDrawingLayouts = value; }
-
-
+        public override string ToString()
+        {
+            return "DrawingLayouts.ToString";
+        }
     }
 
-
-
-
-    /*
-     *  struct AcDocWithLayouts 
-    {
-        internal string fullPathDrawing;
-
-        internal List<string> listLayouts;
-    }
-}
-
-    */
 }
