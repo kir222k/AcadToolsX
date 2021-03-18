@@ -173,10 +173,76 @@ namespace ACADTOOLSX.GUI.Model
             AcadSendMess AcSM = new AcadSendMess();
             if (PathDocCheckList!=null)
             {
+
+                //AcSM.SendStringDebugStars(new List<string> { PathDocCheckList.Count.ToString() });
+
+                DocumentCollection docs = AcadApp.DocumentManager;
+
                 foreach (string item in PathDocCheckList)
                 {
-                    
-                    AcSM.SendStringDebugStars(new List<string> { item });
+                    List<Document> listAcDocs = new List<Document>();
+                    //AcSM.SendStringDebugStars(new List<string> { item });
+
+                    // по списку отмеченных чертежей
+                    foreach (string checkedDrawing in PathDocCheckList)
+                    {
+
+                        // получим список документов, соотв. списку отм. чертежей.
+                        foreach (Document doc in docs)
+                        {
+                            //if ((checkedDrawing == doc.Name) && (!checkedDrawing.Contains(doc.Name) ))
+                            if ((checkedDrawing == doc.Name) && (!listAcDocs.Contains(doc) ))
+                            {
+                                //if (listAcDocs)
+                                listAcDocs.Add(doc);
+
+                            }
+                        }
+                    }
+
+
+                    // список чертежей для работы
+                    //foreach (Document dd in listAcDocs)
+                    //{
+
+                    //    AcSM.SendStringDebugStars(new List<string> { dd.Name});
+                    //}
+
+                    List<Document> listAcDocsX = new List<Document>();
+                    listAcDocsX = listAcDocs.Distinct().ToList();
+                    // по списку документов
+                    foreach (Document checkedDoc in listAcDocsX)
+                    {
+
+
+                        //AcadSendMess AcSM = new AcadSendMess();
+                        AcSM.SendStringDebugStars(new List<string> { checkedDoc.Name });
+
+                        /*
+                        DrawingLayouts DrLays = new DrawingLayouts(checkedDoc);
+                        // по списку листов
+                        foreach (Layout lay in DrLays.GetListDrawingLayouts())
+                        {
+                            // берем имя листа и сохраняем документ с именем листа (остальные листы в получившемся документе удаляем).
+                            if ((lay.LayoutName != "Model") && (lay.LayoutName != checkedDoc.Name) )
+                            {
+                                ////  acDoc.Database.SaveAs(strDWGName, true, DwgVersion.Current, acDoc.Database.SecurityParameters);
+                                //checkedDoc.Database.SaveAs(System.IO.Path.GetDirectoryName(checkedDoc.Name)+                           }
+
+                                string newPathFile = System.IO.Path.GetDirectoryName(checkedDoc.Name) + "\\" + lay.LayoutName + ".dwg";
+                                string newPathFileX = System.IO.Path.GetFullPath(newPathFile);
+                                //AcadSendMess AcSM = new AcadSendMess();
+                                AcSM.SendStringDebugStars(new List<string> {
+                                    //checkedDoc.Name,
+                                    newPathFileX
+
+                                });
+                            }
+                        }
+
+                        */
+                    }
+
                 }
             }
         }
