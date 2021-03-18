@@ -16,7 +16,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <!--БАЗОВЫЙ ГРИД-->
-    <Grid Name="GridBase"  MaxHeight="1080" MaxWidth="1920"  Margin="1,2,1,1">
+    <Grid Name="GridBase"  MaxHeight="1080" MaxWidth="1920"  Margin="1,2,1,1" >
         <!--СТРОКИ-->
         <Grid.RowDefinitions>
             <RowDefinition  Height="Auto"></RowDefinition>
@@ -24,13 +24,14 @@
             <RowDefinition MinHeight="26" MaxHeight="26"></RowDefinition>
         </Grid.RowDefinitions>
         <!--СТОЛБЦЫ-->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="100" Width="200"></ColumnDefinition>
-            <ColumnDefinition MinWidth="100" Width="*"></ColumnDefinition>
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition MinWidth="200" Width="Auto" ></ColumnDefinition>
+            <ColumnDefinition MinWidth="2" MaxWidth="2"></ColumnDefinition>
+            <ColumnDefinition MinWidth="100" Width="*" ></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <!--ПАНЕЛЬ ИНСТРУМЕНТОВ-->
-        <ToolBarPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"  Margin="1,0,1,0"  
+        <ToolBarPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0"  Margin="1,0,1,0"  
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="LightGray">
             <!--ОРИЕНТИРОВАТЬ ГОРИЗОНТАЛЬНО-->
             <ToolBarTray Orientation="Horizontal" 
@@ -56,7 +57,8 @@
                     <Button Name="ButtonSelectAll"  IsEnabled="False" 
                             Click="ButtonSelectAll_Click"
                             MinHeight="22" MaxHeight="22" MinWidth="40" Margin="1,1,1,1"
-                            Style="{DynamicResource ButtonStyleToolBarMenu}">
+                            Style="{DynamicResource ButtonStyleToolBarMenu}"
+                            Visibility="Collapsed">
                         <TextBlock Text=" Выбрать все "></TextBlock>
                         <Button.Resources>
                             <Style  TargetType="Border">
@@ -80,12 +82,20 @@
             </ToolBarTray>
         </ToolBarPanel>
 
+        <!--РАЗДЕЛИТЕЛЬ-->
+        <GridSplitter Grid.Column="1" Grid.Row="1"  
+                      BorderBrush="LightGray" BorderThickness="1"
+                      IsManipulationEnabled="True" ShowsPreview="True"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"></GridSplitter>
+
         <!--ОСНОВНОЕ ТЕЛО-->
         <DataGrid Name="AcDocsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
-                    Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="1,1,1,1"
+                    Grid.Column="0" Grid.Row="1" Margin="1,1,1,1"
                     BorderBrush="Black" BorderThickness="1"  Background="LightGray"
                     SelectionMode="Single"
-                    SelectedCellsChanged="AcDocsGrid_SelectedCellsChanged">
+                    SelectedCellsChanged="AcDocsGrid_SelectedCellsChanged"
+                    HorizontalScrollBarVisibility="Auto" >
             <DataGrid.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="3"/>
@@ -125,8 +135,16 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <ListView x:Name="ListDrawingLayouts" Grid.Column="1" Grid.Row="1" Margin="1,1,1,1">
+        <ListView x:Name="ListDrawingLayouts" Grid.Column="2" Grid.Row="1" Margin="1,1,1,1"
+                  BorderBrush="Black" BorderThickness="1"  Background="LightGray"
+                  HorizontalAlignment="Stretch">
             <!--<ListItem></ListItem>-->
+            <ListView.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="3"/>
+                </Style>
+
+            </ListView.Resources>
         </ListView>
         
         <!--<DataGrid Name="DataChecked" Grid.Column="1" Grid.Row="1" Margin="1,1,1,1"
@@ -140,8 +158,9 @@
 
         </DataGrid>-->
 
+        
         <!--СТРОКА СОСТОЯНИЯ-->
-        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="1,0,1,1"
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="1,0,1,1"
                    BorderBrush="Black" BorderThickness="1"  Background="LightGray">
             <StatusBar.Resources>
                 <Style TargetType="Border">

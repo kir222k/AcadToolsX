@@ -69,6 +69,7 @@ namespace ACADTOOLSX.Classes.GUI.Windows
             int row;
             row = AcDocsGrid.SelectedIndex;
             GridRowSelectEvent?.Invoke(row);
+            
         }
 
 

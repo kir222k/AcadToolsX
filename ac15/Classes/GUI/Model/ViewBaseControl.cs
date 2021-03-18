@@ -95,6 +95,7 @@ namespace ACADTOOLSX.GUI.Model
 
             BaseWindow.UpdateAfterCheckEvent -= UpdateAfterCheckEvHdr;
             BaseWindow.UpdateAfterUnCheckEvent -= UpdateAfterUnCheckEvHdr;
+            BaseWindow.GridRowSelectEvent -= GridRowSelectEvHdr;
 
             // очистим грид 
             AcDocsDataList.Clear();
@@ -120,6 +121,7 @@ namespace ACADTOOLSX.GUI.Model
 
             BaseWindow.UpdateAfterCheckEvent += UpdateAfterCheckEvHdr;
             BaseWindow.UpdateAfterUnCheckEvent += UpdateAfterUnCheckEvHdr;
+            BaseWindow.GridRowSelectEvent += GridRowSelectEvHdr;
         }
 
         internal void SelectAllRowGrid()
@@ -212,10 +214,38 @@ namespace ACADTOOLSX.GUI.Model
     
         internal void GridRowSelect (int row)
         {
-            DrawingLayouts DrLays = new DrawingLayouts();
+            //DrawingLayouts DrLays = new DrawingLayouts();
+            //Document currDoc = new Document();
 
             BaseWindow.ListDrawingLayouts.Items.Clear();
-            BaseWindow.ListDrawingLayouts.Items.Add(row.ToString() + DrLays.ToString());
+            //BaseWindow.ListDrawingLayouts.Items.Add(row.ToString() + DrLays.ToString());
+
+            // получить значение-путь по номеру строки (row)
+            string pathFile = AcDocsDataList[row].PathAcDoc;
+            //BaseWindow.ListDrawingLayouts.Items.Add(pathFile);
+
+            DocumentCollection docs = AcadApp.DocumentManager;
+
+            foreach (Document doc in docs)
+            {
+                //Application.ShowAlertDialog(doc.Name);
+                if (doc.Name == pathFile) 
+                {
+                    //currDoc = doc;
+                    DrawingLayouts DrLaysX = new DrawingLayouts(doc);
+
+                    foreach (Layout lay in DrLaysX.GetListDrawingLayouts())
+                    {
+                        if (lay.LayoutName != "Model")
+                        {
+                            BaseWindow.ListDrawingLayouts.Items.Add(lay.LayoutName);
+                        }
+                    }
+                }
+            }
+
+
+
         }
     }
 
