@@ -8,8 +8,8 @@ namespace ACADTOOLSX
 {
  public struct AcDocWithLayouts 
     {
-        internal string fullPathDrawing;
+        public string fullPathDrawing;
 
-        internal List<string> listLayouts;
+        public List<string> listLayouts;
     }
 }

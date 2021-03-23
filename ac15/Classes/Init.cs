@@ -19,7 +19,7 @@ using TIExCAD;
 using TIExCAD.Generic;
 using ACADTOOLSX.GUI.Model;
 
-// This line is not mandatory, but improves loading performances, чтобы это не значило(!)
+// This line is not mandatory, but improves loading performances (?)
 //[assembly: ExtensionApplication(typeof(ac15.InitSelf))]
 
 namespace ACADTOOLSX
@@ -32,24 +32,21 @@ namespace ACADTOOLSX
     {
         /// <summary>
         /// Инициализация.
-        /// для запуска своих методов при загрузке dll в acad
-        /// через команду _netload дописать здесь свой код 
         /// </summary>
         void IExtensionApplication.Initialize()
 
         {
             InitThis InThis = new InitThis();
 
-            // Вывод данных о приложении в ком строку AutoCAD
-            InThis.InitOne();
+            // Вывод данных о приложении в ком строку AutoCAD и регистрация
+            //InThis.InitReg();
+
             // Подключение обработчиков основных событий.
             InThis.BasicEventHadlerlersConnect();
+
             // Загрузка интерфейса
             InThis.LoadUserInterface();
-
         }
-
-
 
         /// <summary>
         /// Метод, выполняемый при выгрузке плагина
@@ -62,8 +59,6 @@ namespace ACADTOOLSX
         }
     }
 
-
-
 /// <summary>
 /// Дествия при загрузки сборки.
 /// </summary>
@@ -71,53 +66,49 @@ namespace ACADTOOLSX
 /// Загрузка интерфейса пользователя,
 /// чтение ini-файлов, выполнение затем каких-то настроек и др.</remarks>
 internal class InitThis
-        {
-
+    {
         ViewBaseControl ViewBasePaletteSet;
 
-        internal  void InitOne()
-            {
+        internal  void InitReg()
+        {
             // Сообщение в ком строку AutoCAD
             AcadSendMess AcSM = new AcadSendMess();
             // Регистрация сборок в автозагрузке AutoCAD.
             RegtoolsCMDF RegCMD = new RegtoolsCMDF(Constantes.ConstNameCustomApp);
 
-                // Проверка регистрации сборки в автозагрузке AutoCAD.
-                RegGeneric RegGen = new RegGeneric();
+            // Проверка регистрации сборки в автозагрузке AutoCAD.
+            RegGeneric RegGen = new RegGeneric();
                 
-                // Вызывается регистрация сборки: 
-                if (RegGen.GetRegisterCustomApp(Constantes.ConstNameCustomApp,
-                    Assembly.GetExecutingAssembly().Location)) // true
-                                                               // если регистрация прошла успешно, то уведомляем
-                {
-                    AcSM.SendStringDebugStars("Приложение зарегистрировано. " +
-                        "\nПри следуюющем запуске AutoCAD будет загружно автоматически!");
-                    // выведем список зарег приложений, кот в автозагрузке AutoCAD.
-                    RegCMD.GetRegistryKeyAppsCMD();
-
-                }
-                // Иначе ничего не делаем, т.к. наше приложение уже есть в автозагрузке AutoCAD.
-            }
-
-            /// <summary>
-            /// Подключение обработчиков основных событий.
-            /// </summary>
-            internal  void BasicEventHadlerlersConnect()
+            // Вызывается регистрация сборки: 
+            if (RegGen.GetRegisterCustomApp(Constantes.ConstNameCustomApp,
+                Assembly.GetExecutingAssembly().Location)) // true
+                                                            // если регистрация прошла успешно, то уведомляем
             {
-                // 
-                // Подключим автосоздание вкладки ленты.
-                AcadComponentManagerInit.AcadComponentManagerInit_ConnectHandler();
-
-                // ИЗМЕНЕНИЯ СИСТЕМНЫХ ПЕРЕМЕННЫХ
-                // Подключим пересоздание вкладки ленты.
-                // В случае вкладки ленты, отслеживается переменная WSCURRENT.
-                AcadSystemVarChanged.AcadSystemVariableChanged_ConnectHandler();
-
+                AcSM.SendStringDebugStars("Приложение зарегистрировано. " +
+                    "\nПри следуюющем запуске AutoCAD будет загружно автоматически!");
+                // выведем список зарег приложений, кот в автозагрузке AutoCAD.
+                RegCMD.GetRegistryKeyAppsCMD();
 
             }
+            // Иначе ничего не делаем, т.к. наше приложение уже есть в автозагрузке AutoCAD.
+        }
 
-            internal  void LoadUserInterface()
-            {
+        /// <summary>
+        /// Подключение обработчиков основных событий.
+        /// </summary>
+        internal  void BasicEventHadlerlersConnect()
+        {
+            // Подключим автосоздание вкладки ленты.
+            AcadComponentManagerInit.AcadComponentManagerInit_ConnectHandler();
+
+            // ИЗМЕНЕНИЯ СИСТЕМНЫХ ПЕРЕМЕННЫХ
+            // Подключим пересоздание вкладки ленты.
+            // В случае вкладки ленты, отслеживается переменная WSCURRENT.
+            AcadSystemVarChanged.AcadSystemVariableChanged_ConnectHandler();
+        }
+
+        internal void LoadUserInterface()
+        {
 
             // если файла usercadr.ini нет в папке /sys, то загрузка в соотв. с настройками cadr.ini (кот. исп. при инсталяции)
             // usercadr.ini создается при первой запуске окна настроек, или при "сбросить" в онке настроек (заново создается)
@@ -130,18 +121,15 @@ internal class InitThis
             // AcadSysVarChangedEvHr_WSCURRENT
             #endregion
 
-
             // Меню
 
             // Другие элементы интерфейса
 
             // ПАЛИТРА.
-             ViewBasePaletteSet = new ViewBaseControl();
-
-
-
+            ViewBasePaletteSet = new ViewBaseControl();
         }
+    }
 
-        }
-    
 }
+    
+

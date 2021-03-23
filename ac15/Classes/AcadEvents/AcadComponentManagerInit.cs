@@ -11,11 +11,12 @@ using AdW = Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ACADTOOLSX.GUI.Model;
 
+[assembly: CommandClass(typeof(ACADTOOLSX.AcadComponentManagerInit))]
+
 namespace ACADTOOLSX
 {
     static class AcadComponentManagerInit
     {
-
         /// <summary>
         /// Подключение обоработчика к событию создания ленты, для автоподключения нашей вкладки
         /// </summary>
@@ -30,24 +31,24 @@ namespace ACADTOOLSX
         /// </summary>
         internal static void AcadComponentManager_ItemInitialized(object sender, Autodesk.Windows.RibbonItemEventArgs e)
         {
-            // Создать и показать палитру
-            var ViewBase = new ViewBaseControl();
-            ViewBase.ViewBaseCreate();
-
-
-            // Создать и загрузить вкладку
-            //SampleCreateRibbonTabClass2 SampleRibTab =
-            //    new SampleCreateRibbonTabClass2();
-            //SampleRibTab.TiexTestRibCreate3();
-            RibbonTabBuildDDEMZ RibTab = new RibbonTabBuildDDEMZ(ViewBase);
-            RibTab.RibbonTabBuild();
-
-
+            AcadIntefaceLoad();
 
             // Отключить обработчик загрузки ленты, т.к. он вызвается
             // только 1 раз при инициализации DLL.
             ComponentManager.ItemInitialized -=
                 new EventHandler<RibbonItemEventArgs>(AcadComponentManager_ItemInitialized);
+        }
+
+        [CommandMethod("AcDocExplodeLoad")]
+        public static void AcadIntefaceLoad()
+        {
+            // Создать и показать палитру
+            var ViewBase = new ViewBaseControl();
+            ViewBase.ViewBaseCreate();
+
+            // Создать и загрузить вкладку
+            RibbonTabBuildDDEMZ RibTab = new RibbonTabBuildDDEMZ(ViewBase);
+            RibTab.RibbonTabBuild();
         }
     }
 

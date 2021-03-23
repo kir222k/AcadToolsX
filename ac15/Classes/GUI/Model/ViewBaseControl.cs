@@ -23,6 +23,9 @@ using System.Runtime.InteropServices;
 using ACADTOOLSX.Classes.GUI.Windows;
 using ACADTOOLSX;
 using TIExCAD.Generic;
+using System.IO;
+
+//using Atalasoft.Converters;
 
 namespace ACADTOOLSX.GUI.Model
 {
@@ -178,72 +181,121 @@ namespace ACADTOOLSX.GUI.Model
 
                 DocumentCollection docs = AcadApp.DocumentManager;
 
-                foreach (string item in PathDocCheckList)
+                //foreach (string item in PathDocCheckList)
+                //{
+                List<Document> listAcDocs = new List<Document>();
+                //AcSM.SendStringDebugStars(new List<string> { item });
+
+                // по списку отмеченных чертежей
+                foreach (string checkedDrawing in PathDocCheckList)
                 {
-                    List<Document> listAcDocs = new List<Document>();
-                    //AcSM.SendStringDebugStars(new List<string> { item });
 
-                    // по списку отмеченных чертежей
-                    foreach (string checkedDrawing in PathDocCheckList)
+                    // получим список документов, соотв. списку отм. чертежей.
+                    foreach (Document doc in docs)
                     {
-
-                        // получим список документов, соотв. списку отм. чертежей.
-                        foreach (Document doc in docs)
+                        //if ((checkedDrawing == doc.Name) && (!checkedDrawing.Contains(doc.Name) ))
+                        if ((checkedDrawing == doc.Name) && (!listAcDocs.Contains(doc) ))
                         {
-                            //if ((checkedDrawing == doc.Name) && (!checkedDrawing.Contains(doc.Name) ))
-                            if ((checkedDrawing == doc.Name) && (!listAcDocs.Contains(doc) ))
-                            {
-                                //if (listAcDocs)
-                                listAcDocs.Add(doc);
+                            //if (listAcDocs)
+                            listAcDocs.Add(doc);
 
-                            }
                         }
                     }
-
-
-                    // список чертежей для работы
-                    //foreach (Document dd in listAcDocs)
-                    //{
-
-                    //    AcSM.SendStringDebugStars(new List<string> { dd.Name});
-                    //}
-
-                    List<Document> listAcDocsX = new List<Document>();
-                    listAcDocsX = listAcDocs.Distinct().ToList();
-                    // по списку документов
-                    foreach (Document checkedDoc in listAcDocsX)
-                    {
-
-
-                        //AcadSendMess AcSM = new AcadSendMess();
-                        AcSM.SendStringDebugStars(new List<string> { checkedDoc.Name });
-
-                        /*
-                        DrawingLayouts DrLays = new DrawingLayouts(checkedDoc);
-                        // по списку листов
-                        foreach (Layout lay in DrLays.GetListDrawingLayouts())
-                        {
-                            // берем имя листа и сохраняем документ с именем листа (остальные листы в получившемся документе удаляем).
-                            if ((lay.LayoutName != "Model") && (lay.LayoutName != checkedDoc.Name) )
-                            {
-                                ////  acDoc.Database.SaveAs(strDWGName, true, DwgVersion.Current, acDoc.Database.SecurityParameters);
-                                //checkedDoc.Database.SaveAs(System.IO.Path.GetDirectoryName(checkedDoc.Name)+                           }
-
-                                string newPathFile = System.IO.Path.GetDirectoryName(checkedDoc.Name) + "\\" + lay.LayoutName + ".dwg";
-                                string newPathFileX = System.IO.Path.GetFullPath(newPathFile);
-                                //AcadSendMess AcSM = new AcadSendMess();
-                                AcSM.SendStringDebugStars(new List<string> {
-                                    //checkedDoc.Name,
-                                    newPathFileX
-
-                                });
-                            }
-                        }
-
-                        */
-                    }
-
                 }
+                
+
+            //}
+                // список чертежей для работы
+                //foreach (Document dd in listAcDocs)
+                //{
+
+                //    AcSM.SendStringDebugStars(new List<string> { dd.Name});
+                //}
+
+                //List<Document> listAcDocsX = new List<Document>();
+                // IEnumerable<Document> listAcDocsX = listAcDocs.Distinct();
+
+                // var results = table2.GroupBy(x => x.ParamId).Select(x => x.First()).ToList();
+                // var listAcDocsX = listAcDocs.GroupBy(x => x.Name).Select(x => x.First()).ToList();
+
+                //AcSM.SendStringDebugStars(new List<string> { "******************************" });
+                // по списку документов
+                foreach (Document checkedDoc in listAcDocs)
+                {
+
+
+                    //AcadSendMess AcSM = new AcadSendMess();
+                    //AcSM.SendStringDebugStars(new List<string> { checkedDoc.Name , "new"});
+
+                    // Atalasoft.Converters.RectangleFTypeConverter cw = new RectangleFTypeConverter();
+                        
+                        
+
+                        
+                    DrawingLayouts DrLays = new DrawingLayouts(checkedDoc);
+                    // по списку листов
+                    foreach (Layout lay in DrLays.GetListDrawingLayouts())
+                    {
+                        // берем имя листа и сохраняем документ с именем листа (остальные листы в получившемся документе удаляем).
+                        if ((lay.LayoutName != "Model") && (lay.LayoutName != Path.GetFileNameWithoutExtension (checkedDoc.Name) ))
+                        {
+                            ////  acDoc.Database.SaveAs(strDWGName, true, DwgVersion.Current, acDoc.Database.SecurityParameters);
+                            //checkedDoc.Database.SaveAs(System.IO.Path.GetDirectoryName(checkedDoc.Name)+                           }
+
+                            string newPathFile = System.IO.Path.GetDirectoryName(checkedDoc.Name) + "\\" + lay.LayoutName + ".dwg";
+                            string newPathFileX = System.IO.Path.GetFullPath(newPathFile);
+                            //AcadSendMess AcSM = new AcadSendMess();
+                            AcSM.SendStringDebugStars(new List<string> {
+                                //checkedDoc.Name,
+                                newPathFileX
+
+                            });
+
+                            checkedDoc.Database.SaveAs(newPathFileX, DwgVersion.Current);
+
+                            //docs.Open(newPathFileX, false);
+                            Database db = new Database(false, true);
+                            using (db)
+                            {
+                                db.ReadDwgFile(
+                                    newPathFileX,
+                                    System.IO.FileShare.Read,
+                                    false,
+                                    ""
+                                );
+                                //}
+
+
+
+                                //var db = docs.MdiActiveDocument.Database;
+
+                                Transaction tr = db.TransactionManager.StartTransaction();
+                                using (tr)
+                                {
+                                    // ACAD_LAYOUT dictionary.
+                                    DBDictionary layoutDict = tr.GetObject(db.LayoutDictionaryId, OpenMode.ForRead) as DBDictionary;
+
+                                    foreach (DBDictionaryEntry de in layoutDict)
+                                    {
+                                        string layoutName = de.Key;
+                                        if ((layoutName != "Model") && (layoutName != Path.GetFileNameWithoutExtension(newPathFileX)))
+                                        {
+                                            LayoutManager.Current.DeleteLayout(layoutName); // Delete layout.
+                                        }
+                                    }
+
+                                }
+                            }
+
+                            //}
+
+
+                        }
+                    }
+
+                        
+                }
+
             }
         }
 
