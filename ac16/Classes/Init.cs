@@ -40,7 +40,7 @@ namespace ACADTOOLSX
 
             // Вывод данных о приложении в ком строку AutoCAD и регистрация
             //InThis.InitReg();
-            AcadComponentManagerInit.AcadIntefaceLoad();
+           // AcadComponentManagerInit.AcadIntefaceLoad();
 
             // Подключение обработчиков основных событий.
             InThis.BasicEventHadlerlersConnect();

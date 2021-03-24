@@ -95,57 +95,57 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ac15\Classes\AcadEvents\AcadComponentManagerInit.cs">
+    <Compile Include="..\ac16\Classes\AcadEvents\AcadComponentManagerInit.cs">
       <Link>Classes\AcadEvents\AcadComponentManagerInit.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\AcadEvents\AcadSystemVarChanged.cs">
+    <Compile Include="..\ac16\Classes\AcadEvents\AcadSystemVarChanged.cs">
       <Link>Classes\AcadEvents\AcadSystemVarChanged.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\GUI\Model\ViewBaseControl.cs">
+    <Compile Include="..\ac16\Classes\GUI\Model\ViewBaseControl.cs">
       <Link>Classes\GUI\Model\ViewBaseControl.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\GUI\Ribbon\RibTabMzBuild.cs">
+    <Compile Include="..\ac16\Classes\GUI\Ribbon\RibTabMzBuild.cs">
       <Link>Classes\GUI\Ribbon\RibTabMzBuild.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\GUI\Windows\MzBaseWindow.xaml.cs">
+    <Compile Include="..\ac16\Classes\GUI\Windows\MzBaseWindow.xaml.cs">
       <Link>Classes\GUI\Windows\MzBaseWindow.xaml.cs</Link>
       <DependentUpon>MzBaseWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\ac15\Classes\Init.cs">
+    <Compile Include="..\ac16\Classes\Init.cs">
       <Link>Classes\Init.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\Sys\AcadMetods.cs">
+    <Compile Include="..\ac16\Classes\Interfaces.cs">
+      <Link>Classes\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\ac16\Classes\Sys\AcadMetods.cs">
       <Link>Classes\Sys\AcadMetods.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\Sys\Constantes.cs">
+    <Compile Include="..\ac16\Classes\Sys\Constantes.cs">
       <Link>Classes\Sys\Constantes.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\Sys\Enums.cs">
+    <Compile Include="..\ac16\Classes\Sys\Enums.cs">
       <Link>Classes\Sys\Enums.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\Sys\Interfaces.cs">
-      <Link>Classes\Sys\Interfaces.cs</Link>
-    </Compile>
-    <Compile Include="..\ac15\Classes\Sys\StaticObjects.cs">
+    <Compile Include="..\ac16\Classes\Sys\StaticObjects.cs">
       <Link>Classes\Sys\StaticObjects.cs</Link>
     </Compile>
-    <Compile Include="..\ac15\Classes\Sys\Structures.cs">
+    <Compile Include="..\ac16\Classes\Sys\Structures.cs">
       <Link>Classes\Sys\Structures.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\ac15\Classes\GUI\Windows\MzBaseWindow.xaml">
+    <Page Include="..\ac16\Classes\GUI\Windows\MzBaseWindow.xaml">
       <Link>Classes\GUI\Windows\MzBaseWindow.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\ac15\DictionaryBaseWpfMenuButtons.xaml">
+    <Page Include="..\ac16\DictionaryBaseWpfMenuButtons.xaml">
       <Link>DictionaryBaseWpfMenuButtons.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\ac15\DictionaryBaseWpfMenuButtons2.xaml">
+    <Page Include="..\ac16\DictionaryBaseWpfMenuButtons2.xaml">
       <Link>DictionaryBaseWpfMenuButtons2.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
