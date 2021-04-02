@@ -234,71 +234,85 @@ namespace ACADTOOLSX.GUI.Model
                     List<PathDrawingWithLaysForDelete> listFilesFromLays = new List<PathDrawingWithLaysForDelete>();
                         
                     DrawingLayouts DrLays = new DrawingLayouts(checkedDoc);
+
+
                     // по списку листов
                     foreach (Layout lay in DrLays.GetListDrawingLayouts())
                     {
-                        // берем имя листа и сохраняем документ с именем листа (остальные листы в получившемся документе удаляем).
+                        // Берем имя листа и сохраняем документ с именем листа.
                         if ((lay.LayoutName != "Model") && (lay.LayoutName != Path.GetFileNameWithoutExtension (checkedDoc.Name) ))
                         {
                             ////  acDoc.Database.SaveAs(strDWGName, true, DwgVersion.Current, acDoc.Database.SecurityParameters);
                             //checkedDoc.Database.SaveAs(System.IO.Path.GetDirectoryName(checkedDoc.Name)+                           }
+                            string nameLayForSave = lay.LayoutName;
 
                             string newPathFile = System.IO.Path.GetDirectoryName(checkedDoc.Name) + "\\" + lay.LayoutName + ".dwg";
                             string newPathFileX = System.IO.Path.GetFullPath(newPathFile);
                             //AcadSendMess AcSM = new AcadSendMess();
+                            /*
                             AcSM.SendStringDebugStars(new List<string> {
                                 //checkedDoc.Name,
                                 newPathFileX
 
-                            });
+                            }); */
 
                             // сделаем лист, кот. совпадает с новым файлом текущим
-                            //lay.LayoutName
+                            // Database currentDatabase = HostApplicationServices.WorkingDatabase;
 
-                            // using (DocumentLock documentLock = mdiActiveDocument.LockDocument())
-
-
-                            Database currentDatabase = HostApplicationServices.WorkingDatabase;
                             // всегда блокируем документ для операций, кот. его изменяют (Ривиллис гуру)
                             // https://adn-cis.org/forum/index.php?topic=7794.0
 
-                            using (checkedDoc.Database)
+                            //Database db = doc.Database;
+                            //Transaction tr =
+                            //  db.TransactionManager.StartTransaction();
+                            //using (tr)
+                            //{
+
+                            Database currentDatabase = HostApplicationServices.WorkingDatabase;
+
+                            var checkDb = checkedDoc.Database;
+
+                            using (DocumentLock dLock2 = checkedDoc.LockDocument()) 
                             {
-                                HostApplicationServices.WorkingDatabase = checkedDoc.Database;
-                                using (DocumentLock dLock = checkedDoc.LockDocument())
+                                Transaction tr = checkDb.TransactionManager.StartTransaction();
+                                using (tr)
                                 {
-                                    using (Transaction tr = checkedDoc.Database.TransactionManager.StartTransaction())
-                                    // using (DocumentLock documentLock = mdiActiveDocument.LockDocument())
+                                    DBDictionary layoutDic
+                                        = tr.GetObject(
+                                                        checkedDoc.Database.LayoutDictionaryId,
+                                                        OpenMode.ForWrite,
+                                                        false, false
+                                                      ) as DBDictionary;
+
+                                    foreach (DBDictionaryEntry entry in layoutDic)
                                     {
-                                        // sactionManager.GetObjectInternal(AcDbTransactionManager* pTM, ObjectId id, OpenMode mode, Boolean openErased, Boolean forceOpenOnLockedLayer)
-                                        DBDictionary layoutDic
-                                            = tr.GetObject(
-                                                            checkedDoc.Database.LayoutDictionaryId,
-                                                            OpenMode.ForWrite,
-                                                            false, false
-                                                          ) as DBDictionary;
-
-                                        foreach (DBDictionaryEntry entry in layoutDic)
+                                        string nameLay = entry.Key;
+                                        // Если текущее имя листа 
+                                        if (nameLayForSave == nameLay)
                                         {
-                                            string nameLayDel = entry.Key;
-                                            if (lay.LayoutName == nameLayDel)
-                                            {
-                                                //ObjectId layoutId = entry.Value;
-                                                //lm.SetCurrentLayoutId(layoutId);
-                                                //LayoutManager.Current.SetCurrentLayoutId(entry.Value);
-                                                //LayoutManager.Current.DeleteLayout(nameLayDel);
+                                            if (HostApplicationServices.WorkingDatabase != checkDb)
+                                                HostApplicationServices.WorkingDatabase = checkDb;
+                                            LayoutManager.Current.CurrentLayout = nameLay;
 
-                                                //checkedDoc.Database.layo
-                                                    //Database currentDatabase = HostApplicationServices.WorkingDatabase;
-                                                LayoutManager.Current.CurrentLayout = lay.LayoutName;
-                                            }
+                                            
                                         }
-                                        tr.Commit();
                                     }
+
+                                    tr.Commit();
                                 }
+                            }
+
+                            if (HostApplicationServices.WorkingDatabase != currentDatabase)
                                 HostApplicationServices.WorkingDatabase = currentDatabase;
 
-                            }
+
+
+
+
+
+
+
+
 
                             // сохранить новый файл
                             checkedDoc.Database.SaveAs(newPathFileX, DwgVersion.Current);
@@ -321,13 +335,14 @@ namespace ACADTOOLSX.GUI.Model
                         }
                     }
 
-                    // удалим в производных файлах ненужные листы
+                    // Удалим в производных файлах ненужные листы.
                     foreach (PathDrawingWithLaysForDelete dls in listFilesFromLays)
                     {
                          DeleteLayoutsAsync(dls.fullPathDrawing, dls.listLayoutNamesForDelete);
                     }
 
                     // удалим в текущем файле ненужные листы
+                    /*
                     using (DocumentLock dLock2 = checkedDoc.LockDocument())
                     {
                         using (Transaction tr2 = checkedDoc.Database.TransactionManager.StartTransaction())
@@ -361,6 +376,10 @@ namespace ACADTOOLSX.GUI.Model
                         //checkedDoc.Database.SaveAs(checkedDoc.Name, DwgVersion.Current);
 
                     }
+                    */
+
+
+
 
                     //// checkedDoc.Database.SaveAs(checkedDoc.Name, DwgVersion.Current);
                     //using (DocumentLock dLock3 = checkedDoc.LockDocument())
@@ -412,64 +431,77 @@ namespace ACADTOOLSX.GUI.Model
                     //await Task.Run(() =>
                     //{
                         //targetDatabase.ReadDwgFile(fileName, System.IO.FileShare.ReadWrite, false, null);
+
+                        // Открываем файл на чтение.
                         targetDatabase.ReadDwgFile(fileName, FileOpenMode.OpenForReadAndAllShare, false, null);
                         //targetDatabase.ReadDwgFile(fileName, FileOpenMode.OpenForReadAndWriteNoShare, false, null);
                     //});
-                    //targetDatabase
 
+                    // Делаем рабочей базой БД из открытого файла.
                     HostApplicationServices.WorkingDatabase = targetDatabase;
+                    // Хрен знает что такое.
                     targetDatabase.CloseInput(true);
 
-                   // LayoutManager lm = LayoutManager.Current;
-
-                    //lm.DeleteLayout(layoutName);
-                    //lm.SetCurrentLayoutId()
-
-                    //using (Transaction tr = targetDatabase.TransactionManager.StartTransaction())
-                    //{
-                    //    DBDictionary layoutDic
-                    //        = tr.GetObject(
-                    //                        targetDatabase.LayoutDictionaryId,
-                    //                        OpenMode.ForWrite,
-                    //                        false
-                    //                      ) as DBDictionary;
-
-                    //    string thisFleName = Path.GetFileNameWithoutExtension(fileName);
-                    //    foreach (DBDictionaryEntry entry in layoutDic)
-                    //    {
-                    //        string nameLay = entry.Key;
-                    //        if (nameLay == thisFleName)
-                    //        {
-                    //            ObjectId layoutId = entry.Value;
-                    //            LayoutManager.Current.SetCurrentLayoutId(layoutId);
-                    //        }
-                    //    }
-
-                    //    tr.Commit();
-                    //}
-
+                    /*
+                    // Cделаем лист, кот. совпадает с именем файла текущим.
+                    using (DocumentLock dLock = )
                     using (Transaction tr2 = targetDatabase.TransactionManager.StartTransaction())
-                    {
+                    { // Получаем словарь листов.
                         DBDictionary layoutDic2
                             = tr2.GetObject(
                                             targetDatabase.LayoutDictionaryId,
                                             OpenMode.ForWrite,
                                             false
                                           ) as DBDictionary;
-
+                        // Проход по словарю.
                         foreach (DBDictionaryEntry entry2 in layoutDic2)
                         {
+                            // Получим имя листа.
                             string nameLayDel = entry2.Key;
+                            // Если список листов на удаление содержит текущее имя из коллекции.
                             if (layoutNames.Contains(nameLayDel))
                             {
                                 //ObjectId layoutId = entry.Value;
                                 //lm.SetCurrentLayoutId(layoutId);
+                                // Удаляем слой.
                                 LayoutManager.Current.DeleteLayout(nameLayDel);
                             }
                         }
+                        // Завершаем транзакцию.
+                        tr2.Commit();
+                    }
+                    */
+
+
+
+                    // Транзакция.
+                    using (Transaction tr2 = targetDatabase.TransactionManager.StartTransaction())
+                    { // Получаем словарь листов.
+                        DBDictionary layoutDic2
+                            = tr2.GetObject(
+                                            targetDatabase.LayoutDictionaryId,
+                                            OpenMode.ForWrite,
+                                            false
+                                          ) as DBDictionary;
+                        // Проход по словарю.
+                        foreach (DBDictionaryEntry entry2 in layoutDic2)
+                        {
+                            // Получим имя листа.
+                            string nameLayDel = entry2.Key;
+                            // Если список листов на удаление содержит текущее имя из коллекции.
+                            if (layoutNames.Contains(nameLayDel))
+                            {
+                                //ObjectId layoutId = entry.Value;
+                                //lm.SetCurrentLayoutId(layoutId);
+                                // Удаляем слой.
+                                LayoutManager.Current.DeleteLayout(nameLayDel);
+                            }
+                        }
+                        // Завершаем транзакцию.
                         tr2.Commit();
                     }
 
+                    #region INFO
                     // https://forums.autodesk.com/t5/net/remove-layout/td-p/5824050
 
                     // https://adn-cis.org/forum/index.php?topic=2723.0
@@ -481,27 +513,21 @@ namespace ACADTOOLSX.GUI.Model
                     // https://spiderinnet1.typepad.com/blog/2013/03/autocad-net-read-dwg-into-memory-using-databasereaddwgfile.html
 
                     // https://forums.autodesk.com/t5/net/readdwgfile-efilesharingviolation/td-p/2076678
+                    #endregion
 
                     //await Task.Run(() =>
                     //{
-                        targetDatabase.SaveAs(fileName, DwgVersion.Current);
+                    targetDatabase.SaveAs(fileName, DwgVersion.Current);
                     //targetDatabase.Save();
                     //});
-                   
-                    //foreach (var layName in layoutNames)
-                    //{
-                    //    lm.DeleteLayout(layName);
-                    //}
                 }
-                //return "Delete layout succeeded";
             }
 
+            #region CATCH
             catch (Autodesk.AutoCAD.Runtime.Exception exa)
             {
-
                 //AcadSendMess AcSM = new AcadSendMess();
                 //AcSM.SendStringDebugStars(new List<string> {exa.ToString() });
-
                 HostApplicationServices.WorkingDatabase = currentDatabase;
             }
 
@@ -513,9 +539,7 @@ namespace ACADTOOLSX.GUI.Model
             {
                 HostApplicationServices.WorkingDatabase = currentDatabase;
             }
-
-            string s = "sds";
-
+            #endregion
         }
 
 
