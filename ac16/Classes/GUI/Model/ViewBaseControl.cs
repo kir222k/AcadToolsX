@@ -257,21 +257,11 @@ namespace ACADTOOLSX.GUI.Model
                             }); */
 
                             // сделаем лист, кот. совпадает с новым файлом текущим
-                            // Database currentDatabase = HostApplicationServices.WorkingDatabase;
-
                             // всегда блокируем документ для операций, кот. его изменяют (Ривиллис гуру)
                             // https://adn-cis.org/forum/index.php?topic=7794.0
 
-                            //Database db = doc.Database;
-                            //Transaction tr =
-                            //  db.TransactionManager.StartTransaction();
-                            //using (tr)
-                            //{
-
                             Database currentDatabase = HostApplicationServices.WorkingDatabase;
-
                             var checkDb = checkedDoc.Database;
-
                             using (DocumentLock dLock2 = checkedDoc.LockDocument()) 
                             {
                                 Transaction tr = checkDb.TransactionManager.StartTransaction();
@@ -301,18 +291,8 @@ namespace ACADTOOLSX.GUI.Model
                                     tr.Commit();
                                 }
                             }
-
                             if (HostApplicationServices.WorkingDatabase != currentDatabase)
                                 HostApplicationServices.WorkingDatabase = currentDatabase;
-
-
-
-
-
-
-
-
-
 
                             // сохранить новый файл
                             checkedDoc.Database.SaveAs(newPathFileX, DwgVersion.Current);
@@ -342,41 +322,70 @@ namespace ACADTOOLSX.GUI.Model
                     }
 
                     // удалим в текущем файле ненужные листы
-                    /*
+                    Database currentDatabase2 = HostApplicationServices.WorkingDatabase;
+                    var checkDb2 = checkedDoc.Database;
                     using (DocumentLock dLock2 = checkedDoc.LockDocument())
                     {
-                        using (Transaction tr2 = checkedDoc.Database.TransactionManager.StartTransaction())
-                        // using (DocumentLock documentLock = mdiActiveDocument.LockDocument())
+                        Transaction tr = checkDb2.TransactionManager.StartTransaction();
+                        using (tr)
                         {
-                            // sactionManager.GetObjectInternal(AcDbTransactionManager* pTM, ObjectId id, OpenMode mode, Boolean openErased, Boolean forceOpenOnLockedLayer)
-                            string nameLayLikeFile = Path.GetFileNameWithoutExtension(checkedDoc.Name);
-                            DBDictionary layoutDic2
+                            DBDictionary layoutDic
+                                = tr.GetObject(
+                                                checkedDoc.Database.LayoutDictionaryId,
+                                                OpenMode.ForWrite,
+                                                false, false
+                                              ) as DBDictionary;
+
+                            foreach (DBDictionaryEntry entry in layoutDic)
+                            {
+                                string nameLay = entry.Key;
+                                // Если текущее имя листа 
+                                if (Path.GetFileNameWithoutExtension(checkedDoc.Name) == nameLay)
+                                {
+                                    if (HostApplicationServices.WorkingDatabase != checkDb2)
+                                        HostApplicationServices.WorkingDatabase = checkDb2;
+                                    LayoutManager.Current.CurrentLayout = nameLay;
+
+
+                                }
+                            }
+                            tr.Commit();
+                        }
+
+                        Transaction tr2 = checkDb2.TransactionManager.StartTransaction();
+                        using (tr2)
+                        {
+                            DBDictionary layoutDic
                                 = tr2.GetObject(
                                                 checkedDoc.Database.LayoutDictionaryId,
                                                 OpenMode.ForWrite,
                                                 false, false
                                               ) as DBDictionary;
 
-                            foreach (DBDictionaryEntry entry2 in layoutDic2)
+                            foreach (DBDictionaryEntry entry in layoutDic)
                             {
-                                string nameLayDel2 = entry2.Key;
-                                if ((nameLayLikeFile != nameLayDel2) && (nameLayDel2 != "Model"))
+                                string nameLay = entry.Key;
+                                // Если текущее имя листа 
+                                if ((Path.GetFileNameWithoutExtension(checkedDoc.Name) != nameLay) &&
+                                    (nameLay != "Model"))
                                 {
-                                    //ObjectId layoutId = entry.Value;
-                                    //lm.SetCurrentLayoutId(layoutId);
-                                    //LayoutManager.Current.SetCurrentLayoutId(entry.Value);
-                                    LayoutManager.Current.DeleteLayout(nameLayDel2);
+                                    if (HostApplicationServices.WorkingDatabase != checkDb2)
+                                        HostApplicationServices.WorkingDatabase = checkDb2;
+                                    LayoutManager.Current.DeleteLayout(nameLay);
 
-                                    //LayoutManager.Current.CurrentLayout = lay.LayoutName;
+
                                 }
                             }
                             tr2.Commit();
                         }
 
-                        //checkedDoc.Database.SaveAs(checkedDoc.Name, DwgVersion.Current);
+
 
                     }
-                    */
+
+
+                    if (HostApplicationServices.WorkingDatabase != currentDatabase2)
+                        HostApplicationServices.WorkingDatabase = currentDatabase2;
 
 
 
