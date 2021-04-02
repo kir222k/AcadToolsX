@@ -96,14 +96,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DictionaryBaseWpfMenuButtons.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Resource Include="DictionaryBaseWpfMenuButtons.xaml">
+      <Generator>Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DictionaryBaseWpfMenuButtons2.xaml">
-      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="DictionaryBaseWpfMenuButtons2.xaml">
       <SubType>Designer</SubType>
-    </Page>
+      <Generator>MSbuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

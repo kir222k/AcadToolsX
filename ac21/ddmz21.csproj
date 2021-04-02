@@ -154,16 +154,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\ac16\DictionaryBaseWpfMenuButtons.xaml">
-      <Link>DictionaryBaseWpfMenuButtons.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\ac16\DictionaryBaseWpfMenuButtons2.xaml">
-      <Link>DictionaryBaseWpfMenuButtons2.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
