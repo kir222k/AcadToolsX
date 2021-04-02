@@ -387,7 +387,7 @@ namespace ACADTOOLSX.GUI.Model
                     if (HostApplicationServices.WorkingDatabase != currentDatabase2)
                         HostApplicationServices.WorkingDatabase = currentDatabase2;
 
-
+                    checkedDoc.CloseAndSave(checkedDoc.Name);
 
 
                     //// checkedDoc.Database.SaveAs(checkedDoc.Name, DwgVersion.Current);
